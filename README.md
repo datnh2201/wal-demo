@@ -4,14 +4,14 @@ This project is a simple demonstration to help understand the concept of Write-A
 
 ## What is Write-Ahead Logging?
 
-Write-Ahead Logging is a method for providing atomicity and durability (two of the ACID properties) in database systems. The central idea is that changes to data files (where tables and indexes reside) must be written only after those changes have been logged.
+Write-Ahead Logging is a method for providing atomicity and durability (two of the ACID properties) in database systems. The central idea is that changes to data files only be written only after those changes have been logged.
 
 
 ## How it Works
 
 1.  **Log First:** Before any changes are made to the actual data pages on disk, a log record present the change action is written to a separate log file on stable storage.
-2.  **Commit:** A transaction is considered "committed" once its corresponding log record has been successfully written to the log file.
-3.  **Apply Changes:** The actual changes to the data files can be written later, at a more convenient time (e.g., during a checkpoint or when the memory buffer is full).
+2.  **Commit:** A transaction is considered "committed" once its corresponding log record has been successfully written to the log file.  But the changes made by the transaction may not be applied yet.
+3.  **Apply Changes:** The actual changes to the data files can be written later, at a more convenient time (e.g., during a checkpoint or when the memory buffer is full). The purpose of this is to improve performance by delaying random writes and allow the system to batch updates.
 4.  **Recovery:** In case of a system crash before the changes is written to the disk, the recovery process reads the log. It can redo the changes of committed transactions that weren't yet applied to the data files and undo the changes of incomplete transactions.
 
 ## Performance Improvement
