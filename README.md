@@ -1,5 +1,3 @@
-Of course. I have added a section on performance improvements to the `README.md` file.
-
 # Understanding Write-Ahead Logging (WAL)
 
 This project is a simple demonstration to help understand the concept of Write-Ahead Logging (WAL) and its role in ensuring transaction durability and isolation in database systems.
