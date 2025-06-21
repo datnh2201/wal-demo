@@ -4,13 +4,16 @@ This project is a simple demonstration to help understand the concept of Write-A
 
 ## What is Write-Ahead Logging?
 
-Write-Ahead Logging is a method for providing atomicity and durability (two of the ACID properties) in database systems. The central idea is that changes to data files only be written only after those changes have been logged and transaction is commited.
+Write-Ahead Logging is a method to improve performance and provide atomicity and durability (two of the ACID properties) in database systems. 
+The central idea is any changes to database system will only apply to the memory buffer first to improve performance 
+and to ensure durability it will write WAL logs that present change actions to disk, this writing action is sequential so it is much faster than random writes. 
 
+If the database system crash when the changes are not yet applied to the disk, the system can recover by reading the log and applying the changes of committed transactions or undoing the changes of incomplete transactions.
 
 ## How it Works
 
 1.  **Log First:** Before any changes are made to the actual data pages on disk, a log record present the change action is written to a separate log file on stable storage.
-2.  **Commit:** A transaction is considered "committed" once its corresponding log record has been successfully written to the log file.  But the changes made by the transaction may not be applied yet.
+2.  **Commit:** A transaction is considered "committed" once its corresponding log record has been successfully written to the log file.  But the changes made by the transaction may not be applied yet, only update the memory buffer to make changes visible for other transactions. 
 3.  **Apply Changes:** The actual changes to the data files can be written later, at a more convenient time (e.g., during a checkpoint or when the memory buffer is full). The purpose of this is to improve performance by delaying random writes and allow the system to batch updates.
 4.  **Recovery:** In case of a system crash before the changes is written to the disk, the recovery process reads the log. It can redo the changes of committed transactions that weren't yet applied to the data files and undo the changes of incomplete transactions.
 
