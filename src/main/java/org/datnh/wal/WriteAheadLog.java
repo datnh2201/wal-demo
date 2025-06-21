@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-// Main WAL implementation
+/**
+ * This class responsible for managing the Write-Ahead Log (WAL) in a database system.
+ */
 class WriteAheadLog {
     private final AtomicLong lsnCounter = new AtomicLong(0);
     private final String walFile;
@@ -68,6 +70,10 @@ class WriteAheadLog {
                 entry.getTable() + "." + entry.getKey() + " = " + entry.getNewValue());
     }
 
+    /**
+     * Perform a checkpoint operation to write all dirty pages to disk.
+     * This simulates the process of flushing all changes to persistent storage.
+     */
     public void checkpoint() {
         System.out.println("\n>>> CHECKPOINT STARTED <<<");
         Set<String> dirtyPages = bufferPool.getDirtyPages();
@@ -92,6 +98,10 @@ class WriteAheadLog {
         System.out.println(">>> CHECKPOINT COMPLETED <<<\n");
     }
 
+    /**
+     * Recover the database state by replaying the Write-Ahead Log (WAL).
+     * This method reads the WAL file and re-applies all operations to restore the in-memory state.
+     */
     public void recover() {
         System.out.println("\n>>> RECOVERY STARTED <<<");
 
@@ -127,6 +137,7 @@ class WriteAheadLog {
     }
 
     public void shutdown() {
+        // Ensure any dirty pages are written to disk before shutdown
         checkpoint(); // Final checkpoint
 //        checkpointExecutor.shutdown();
     }

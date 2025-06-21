@@ -23,15 +23,6 @@ class LogEntry {
         this.timestamp = System.currentTimeMillis();
     }
 
-    // Getters
-    public long getLsn() {
-        return lsn;
-    }
-
-    public long getTransactionId() {
-        return transactionId;
-    }
-
     public String getOperation() {
         return operation;
     }
@@ -44,16 +35,8 @@ class LogEntry {
         return key;
     }
 
-    public String getOldValue() {
-        return oldValue;
-    }
-
     public String getNewValue() {
         return newValue;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
     }
 
     @Override

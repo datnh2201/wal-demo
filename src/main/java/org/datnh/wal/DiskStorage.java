@@ -5,7 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-// Simulates persistent storage (disk)
+/**
+ * This class represents a disk storage that holds data persistently.
+ * It simulates writing and reading data to/from disk, with a simple file format.
+ */
 class DiskStorage {
     private final String dataFile;
     private final Map<String, Map<String, String>> persistentData = new HashMap<>();

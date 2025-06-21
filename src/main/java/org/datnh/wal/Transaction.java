@@ -12,7 +12,11 @@ class Transaction {
     private final long transactionId;
     private final WriteAheadLog wal;
     private final BufferPool bufferPool;
+
+    // Transaction log represents all changes made during this transaction
     private final List<LogEntry> transactionLog = new ArrayList<>();
+
+    // Transaction-local buffer to hold uncommitted changes
     private final Map<String, Map<String, String>> transactionBuffer = new HashMap<>();
     private boolean committed = false;
 
@@ -23,6 +27,15 @@ class Transaction {
         System.out.println("\n[TXN-" + transactionId + "] Transaction started");
     }
 
+    /**
+     * Update the value associated with the key in the specified table.
+     * This method buffers the change but does not write to WAL yet.
+     *
+     * @param table      name of the table to update
+     * @param key        the key to update
+     * @param oldValue   the expected old value (for validation)
+     * @param newValue   the new value to set
+     */
     public void update(String table, String key, String oldValue, String newValue) {
         if (committed) {
             throw new IllegalStateException("Transaction already committed");
@@ -45,6 +58,14 @@ class Transaction {
         System.out.println("[TXN-" + transactionId + "] Buffered UPDATE " + table + "." + key + " = " + newValue + " (visible to this transaction only)");
     }
 
+    /**
+     * Insert a new key-value pair into the specified table.
+     * This method buffers the change but does not write to WAL yet.
+     *
+     * @param table name of the table to insert into
+     * @param key   the key to insert
+     * @param value the value to insert
+     */
     public void insert(String table, String key, String value) {
         if (committed) {
             throw new IllegalStateException("Transaction already committed");
@@ -108,10 +129,10 @@ class Transaction {
             wal.writeLogEntryToDisk(entry);
         }
 
-        // Force WAL to disk (synchronous commit)
+        // Force WAL to disk (synchronous commit) to ensure durability
         wal.forceWALToDisk();
 
-        // Only after WAL is safely on disk, apply changes to buffer pool
+        // Only after WAL is safely on disk, apply changes to buffer pool to make it visible to other transactions.
         for (LogEntry entry : transactionLog) {
             wal.applyToBufferPool(entry);
         }

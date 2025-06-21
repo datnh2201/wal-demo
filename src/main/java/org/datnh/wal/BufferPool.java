@@ -6,10 +6,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-// Simulates the in-memory buffer pool
+/**
+ * This class represents a buffer pool that holds data in memory.
+ * Any read or write operations will need to go through this buffer pool to make sure it populate on latest data.
+ */
 class BufferPool {
     // Maps table names to their key-value pairs
     private final Map<String, Map<String, String>> tables = new ConcurrentHashMap<>();
+
+    // changed data not yet written to disk, in the real world, it will be written to disk later when the buffer is full or at checkpoint
     private final Set<String> dirtyPages = ConcurrentHashMap.newKeySet();
 
     public void put(String table, String key, String value) {

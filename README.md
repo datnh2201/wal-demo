@@ -1,10 +1,10 @@
 # Understanding Write-Ahead Logging (WAL)
 
-This project is a simple demonstration to help understand the concept of Write-Ahead Logging (WAL) and its role in ensuring transaction durability and isolation in database systems.
+This project is a simple demonstration to help understand the concept of Write-Ahead Logging (WAL) and its role in ensuring transaction atomicity, durability and isolation in database systems.
 
 ## What is Write-Ahead Logging?
 
-Write-Ahead Logging is a method for providing atomicity and durability (two of the ACID properties) in database systems. The central idea is that changes to data files only be written only after those changes have been logged.
+Write-Ahead Logging is a method for providing atomicity and durability (two of the ACID properties) in database systems. The central idea is that changes to data files only be written only after those changes have been logged and transaction is commited.
 
 
 ## How it Works
